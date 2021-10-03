@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
@@ -16,7 +18,20 @@ import (
 	"time"
 )
 
+var Version = "unversioned"
+var showVersion bool
+
+func init() {
+	flag.BoolVar(&showVersion, "version", false, "show version and exit")
+	flag.Parse()
+	if showVersion {
+		fmt.Println(Version)
+		os.Exit(0)
+	}
+}
+
 func main() {
+	klog.Info("Something aweful")
 	var clusterConfig *rest.Config
 	var err error
 	kubeconfig := os.Getenv("KUBECONFIG")
@@ -36,7 +51,7 @@ func main() {
 	}
 
 	gvr := schema.GroupVersionResource{Group: "apps", Version: "v1", Resource: "deployments"}
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(client, time.Minute, v1.NamespaceAll, nil)
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(client, time.Minute, v1.NamespaceDefault, nil)
 	informer := factory.ForResource(gvr).Informer()
 
 	queue := workqueue.NewRateLimitingQueue(workqueue.DefaultItemBasedRateLimiter())

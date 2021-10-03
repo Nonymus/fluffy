@@ -1,0 +1,13 @@
+apiVersion: skaffold/v2beta23
+kind: Config
+metadata:
+  name: fluffy
+build:
+  artifacts:
+    - image: fluffy
+      docker:
+        dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - "manifests/*.yaml"

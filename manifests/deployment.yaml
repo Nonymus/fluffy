@@ -1,0 +1,17 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: fluffy
+spec:
+  selector:
+    matchLabels:
+      app: fluffy
+  template:
+    metadata:
+      labels:
+        app: fluffy
+    spec:
+      serviceAccountName: deployment-reader
+      containers:
+        - name: fluffy
+          image: fluffy:latest
